@@ -76,6 +76,19 @@ img{max-width:100%;height:auto}
 .bildzeile{display:flex;gap:18px;justify-content:space-between;margin-top:clamp(28px,4vh,44px);color:var(--rauch);font-size:15px}
 .bildzeile p{margin:0;max-width:26em}
 
+/* Gerät */
+.geraet-teaser{border-top:1px solid var(--kante);padding:clamp(56px,9vh,110px) 0 0}
+.geraet-teaser picture,.geraet-teaser img.bild{display:block;width:100%;height:auto}
+.geraet-teaser .bildrahmen{position:relative;margin:clamp(28px,5vh,48px) 0 0;background:#000}
+.geraet-teaser img.bild{-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 60%,transparent 100%)}
+.geraet-teaser figcaption{color:var(--rauch);font-size:15px;margin-top:10px}
+.geraet-teaser .zeile{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,80px);margin-top:clamp(28px,5vh,52px);padding-bottom:clamp(56px,9vh,110px)}
+.geraet-teaser .zeile p{color:#c3bfb6;margin:0 0 18px;max-width:32em}
+.geraet-teaser ul{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:10px}
+.geraet-teaser li{display:flex;gap:12px;align-items:baseline}
+.geraet-teaser li::before{content:"";flex:0 0 18px;height:3px;border-radius:2px;background:var(--gold);box-shadow:0 0 8px var(--gold);transform:translateY(-4px)}
+@media (max-width:760px){.geraet-teaser .zeile{grid-template-columns:1fr}}
+
 /* Haltung */
 .haltung{padding:clamp(56px,9vh,110px) 0;border-top:1px solid var(--kante);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,80px)}
 .haltung dl{margin:0}
@@ -99,6 +112,10 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
   background:var(--gehaeuse);box-shadow:inset 0 0 0 1px var(--kante);font-size:16px}
 .wahl input:checked+label{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--glut)}
 .wahl input:focus-visible+label{outline:2px solid var(--gold);outline-offset:3px}
+.haken{display:flex;gap:12px;align-items:center;cursor:pointer;min-height:44px;font-size:16px}
+.haken input{appearance:none;width:22px;height:22px;flex:0 0 22px;margin:0;border-radius:6px;background:var(--gehaeuse);box-shadow:inset 0 0 0 1.5px var(--kante);display:grid;place-items:center;cursor:pointer}
+.haken input:checked{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.haken input:checked::after{content:"";width:10px;height:3px;border-radius:2px;background:var(--gold);box-shadow:0 0 8px var(--gold)}
 .hinweis{font-size:15px;color:var(--rauch);margin:0}
 .versteckt{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .meldung{border-radius:14px;padding:16px 18px;font-size:16px;background:var(--gehaeuse);box-shadow:inset 0 0 0 1px var(--kante)}
@@ -157,6 +174,31 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
     </div>
   </section>
 
+  <section class="geraet-teaser" id="geraet">
+    <div class="spalte">
+      <h2>bald: deine eigene cloud.</h2>
+      <p class="unter" style="color:var(--rauch);max-width:36em;margin:0">sēn bekommt ein eigenes Zuhause – ein kleines, ruhiges Gerät für dein Regal.</p>
+      <figure class="bildrahmen">
+        <picture>
+          <source media="(max-width:760px)" srcset="bilder/geraet-schmal.webp">
+          <img class="bild" src="bilder/geraet.webp" width="1600" height="1000" alt="Konzeptbild des sēn-Geräts: ein flacher schwarzer Block mit einem leuchtenden goldenen Streifen an der Front und der Wortmarke sēn oben.">
+        </picture>
+        <figcaption>Konzeptbild. Das Gerät ist in Entwicklung.</figcaption>
+      </figure>
+      <div class="zeile">
+        <p>Erkennst du den Strich über dem e? Am Gerät ist er das Licht. Leuchtet er ruhig, ist alles gut – mehr musst du nicht wissen.</p>
+        <div>
+          <ul>
+            <li>Steht bei dir zu Hause. Deine Briefe, Termine und Zahlen bleiben dort.</li>
+            <li>Einstecken, mit dem WLAN verbinden, fertig. Kein Basteln.</li>
+            <li>Gehört dir – keine fremde Cloud, die mitliest.</li>
+          </ul>
+          <a class="knopf leise" href="#beta" data-geraet>Gerät vormerken</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="spalte haltung">
     <h2>was sēn anders macht.</h2>
     <dl>
@@ -186,6 +228,7 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
           <input type="radio" name="geraet" id="g-andere" value="andere"><label for="g-andere">Etwas anderes</label>
         </div>
       </fieldset>
+      <label class="haken"><input type="checkbox" name="hardware" id="f-hw" value="1"><span>Sag mir Bescheid, wenn das sēn-Gerät kommt.</span></label>
       <div class="feld"><label for="f-text">Was soll sēn dir abnehmen? <span style="opacity:.7">(freiwillig)</span></label><textarea id="f-text" name="nachricht" maxlength="500"></textarea></div>
       <div class="versteckt" aria-hidden="true"><label for="f-firma">Firma</label><input id="f-firma" name="firma" tabindex="-1" autocomplete="off"></div>
       <div><button class="knopf" type="submit" id="senden">Anmelden</button></div>
@@ -205,10 +248,11 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
   const HQ="https://deckcloud.tail1d0658.ts.net:10000/hq/warteliste";
   const KONTAKT="gaba.inclouds@gmail.com";
   const f=document.getElementById("anmeldung"),knopf=document.getElementById("senden"),meld=document.getElementById("meldung");
+  document.querySelectorAll("[data-geraet]").forEach(a=>a.addEventListener("click",()=>{document.getElementById("f-hw").checked=true}));
   const zeige=(text,gut)=>{meld.textContent=text;meld.className="meldung"+(gut?" gut":"");meld.hidden=false};
   f.addEventListener("submit",async e=>{
     e.preventDefault();
-    const d=Object.fromEntries(new FormData(f));
+    const d=Object.fromEntries(new FormData(f));d.hardware=!!d.hardware;
     if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(d.email||"")){zeige("Bitte gib eine E-Mail-Adresse ein, unter der wir dich erreichen.");f.email.focus();return}
     knopf.disabled=true;knopf.textContent="Wird gesendet …";
     const ab=new AbortController();const t=setTimeout(()=>ab.abort(),12000);
