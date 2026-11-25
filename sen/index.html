@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>sēn – dein kopf ist kein speicher.</title>
+<meta name="description" content="sēn ordnet Post, Rechnungen, Termine, Aufgaben und Projekte an einem ruhigen Ort. Für Köpfe, die anders denken. Jetzt für die Beta anmelden.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="sēn – dein kopf ist kein speicher.">
+<meta property="og:description" content="Ein ruhiger Ort für deinen Alltag. Für Köpfe, die anders denken.">
+<meta property="og:image" content="https://gabanan0.github.io/sen/bilder/teilen.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="bilder/icon.svg" type="image/svg+xml">
+<link rel="preload" href="schrift/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Instrument Sans";src:url(schrift/instrument-sans.woff2) format("woff2");font-weight:400 700;font-stretch:75% 100%;font-display:swap}
+@font-face{font-family:"Doto";src:url(schrift/doto.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{
+  --nacht:#000;          /* wie das schwarze Filament der Karte */
+  --gehaeuse:#121211;    /* Flächen, Rahmen */
+  --kante:#262623;
+  --gold:#C9A24A;        /* nur für das Makron und Zustände */
+  --glut:#F1DC9C;
+  --knochen:#EDEAE3;     /* Text */
+  --rauch:#8B877E;       /* Nebentext */
+  --spalte:min(1180px,100% - 2*var(--rand));
+  --rand:clamp(20px,5vw,56px);
+}
+*{box-sizing:border-box}
+html{background:var(--nacht);color:var(--knochen);-webkit-text-size-adjust:100%}
+body{margin:0;overflow-x:clip;font:400 18px/1.6 "Instrument Sans",system-ui,sans-serif;font-stretch:100%}
+::selection{background:var(--gold);color:#000}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.spalte{width:var(--spalte);margin-inline:auto}
+
+/* Kopf */
+.kopf{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.kopf .mini{width:58px;height:auto;display:block}
+.lcd{display:inline-flex;align-items:center;gap:10px;font:800 15px/1 "Doto",monospace;letter-spacing:.06em;color:var(--glut);
+  padding:9px 14px;border-radius:10px;background:#0b0a06;box-shadow:inset 0 0 0 1px #2a2614,0 0 22px -10px var(--gold)}
+.lcd i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+/* Bühne */
+.buehne{padding:clamp(48px,11vh,128px) 0 clamp(64px,10vh,120px)}
+.marke{display:block;width:min(100%,980px);height:auto;margin:0 0 clamp(28px,5vh,52px) -0.6%;overflow:visible}
+.marke .b{fill:var(--knochen)}
+.marke .m{fill:var(--gold);filter:url(#gluehen);transform-box:fill-box;transform-origin:left center}
+.leitsatz{font:600 clamp(34px,5.6vw,72px)/1.02 "Instrument Sans",sans-serif;font-stretch:78%;letter-spacing:-.015em;margin:0;max-width:14ch}
+.einstieg{max-width:34em;color:#cfcbc2;font-size:clamp(17px,1.5vw,20px);margin:26px 0 34px}
+.knoepfe{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.knopf{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:999px;border:0;cursor:pointer;
+  font:600 17px/1 "Instrument Sans",sans-serif;text-decoration:none;background:var(--knochen);color:#000;transition:background .15s}
+.knopf:hover{background:#fff}
+.knopf.leise{background:transparent;color:var(--knochen);box-shadow:inset 0 0 0 1.5px var(--kante)}
+.knopf.leise:hover{box-shadow:inset 0 0 0 1.5px var(--rauch)}
+
+@media (prefers-reduced-motion:no-preference){
+  .marke .m{animation:einschalten 1.1s .35s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes einschalten{0%{transform:scaleX(0);opacity:.2}55%{transform:scaleX(1);opacity:1}62%{opacity:.45}70%{opacity:1}100%{transform:scaleX(1);opacity:1}}
+}
+
+/* Einblick */
+.einblick{padding:clamp(56px,9vh,110px) 0;border-top:1px solid var(--kante)}
+h2{font:600 clamp(30px,3.8vw,48px)/1.05 "Instrument Sans",sans-serif;font-stretch:78%;letter-spacing:-.01em;margin:0 0 14px}
+.einblick p.unter{color:var(--rauch);max-width:36em;margin:0 0 clamp(32px,5vh,56px)}
+.buehnenbild{position:relative;padding-bottom:clamp(40px,8vw,120px)}
+.geraet{position:relative;border-radius:24px;background:var(--gehaeuse);padding:14px;box-shadow:inset 0 0 0 1px var(--kante)}
+.geraet::before,.geraet::after,.geraet .s1,.geraet .s2{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#2c2c29;box-shadow:inset 0 1px 0 #3c3c38}
+.geraet::before{top:5px;left:5px}.geraet::after{top:5px;right:5px}.geraet .s1{bottom:5px;left:5px}.geraet .s2{bottom:5px;right:5px}
+.geraet img{display:block;width:100%;height:auto;border-radius:12px}
+img{max-width:100%;height:auto}
+.handy{position:absolute;right:clamp(-10px,2vw,40px);bottom:0;width:clamp(150px,22%,270px);border-radius:34px;padding:9px;background:#1a1a18;
+  box-shadow:inset 0 0 0 1px #33332f,0 30px 60px -20px #000}
+.handy img{display:block;width:100%;height:auto;border-radius:26px}
+.bildzeile{display:flex;gap:18px;justify-content:space-between;margin-top:clamp(28px,4vh,44px);color:var(--rauch);font-size:15px}
+.bildzeile p{margin:0;max-width:26em}
+
+/* Haltung */
+.haltung{padding:clamp(56px,9vh,110px) 0;border-top:1px solid var(--kante);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,80px)}
+.haltung dl{margin:0}
+.haltung dt{font:600 22px/1.25 "Instrument Sans",sans-serif;margin:0 0 6px}
+.haltung dd{margin:0 0 34px;color:#c3bfb6;max-width:30em}
+.haltung dd:last-child{margin-bottom:0}
+
+/* Beta */
+.beta{padding:clamp(56px,9vh,110px) 0;border-top:1px solid var(--kante);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,80px)}
+.beta .text p{color:#c3bfb6;max-width:26em}
+form{display:grid;gap:18px}
+.feld label,.feld legend{display:block;font-size:15px;color:var(--rauch);margin:0 0 7px;padding:0}
+.feld input,.feld textarea{width:100%;font:400 18px/1.4 "Instrument Sans",sans-serif;color:var(--knochen);background:var(--gehaeuse);border:0;border-radius:14px;
+  padding:15px 16px;box-shadow:inset 0 0 0 1px var(--kante);min-height:54px}
+.feld textarea{min-height:110px;resize:vertical}
+.feld input:focus,.feld textarea:focus{outline:none;box-shadow:inset 0 0 0 1.5px var(--gold)}
+fieldset.feld{border:0;margin:0;padding:0;min-width:0}
+.wahl{display:flex;flex-wrap:wrap;gap:8px}
+.wahl{position:relative}.wahl input{position:absolute;left:0;top:0;width:1px;height:1px;min-height:0;opacity:0;pointer-events:none}
+.wahl label{margin:0;display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border-radius:999px;cursor:pointer;color:var(--knochen);
+  background:var(--gehaeuse);box-shadow:inset 0 0 0 1px var(--kante);font-size:16px}
+.wahl input:checked+label{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--glut)}
+.wahl input:focus-visible+label{outline:2px solid var(--gold);outline-offset:3px}
+.hinweis{font-size:15px;color:var(--rauch);margin:0}
+.versteckt{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.meldung{border-radius:14px;padding:16px 18px;font-size:16px;background:var(--gehaeuse);box-shadow:inset 0 0 0 1px var(--kante)}
+.meldung.gut{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--glut)}
+.meldung[hidden]{display:none}
+
+.fuss{border-top:1px solid var(--kante);padding:34px 0 calc(34px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;color:var(--rauch);font-size:15px}
+.fuss b{color:var(--knochen);font-weight:600}
+
+@media (max-width:760px){
+  body{font-size:17px}
+  .haltung,.beta{grid-template-columns:1fr}
+  .handy{position:relative;right:auto;width:62%;margin:-80px 0 0 auto}
+  .buehnenbild{padding-bottom:0}
+  .bildzeile{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="gluehen" x="-40%" y="-200%" width="180%" height="500%">
+  <feGaussianBlur stdDeviation="14" result="w"/><feColorMatrix in="w" type="matrix" values="1 0 0 0 .1  0 .85 0 0 .05  0 0 .4 0 0  0 0 0 .9 0" result="g"/>
+  <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter></svg>
+
+<header class="spalte kopf">
+  <a href="#" aria-label="sēn – nach oben"><svg class="mini" viewBox="0 0 1715 735" aria-hidden="true"><path d="M266 735Q154 735 88.0 690.0Q22 645 16 566H150Q155 600 184.5 617.5Q214 635 266 635Q313 635 334.5 621.5Q356 608 356 583Q356 564 343.5 553.5Q331 543 298 536L216 519Q125 500 82.0 461.5Q39 423 39 362Q39 288 96.0 246.5Q153 205 255 205Q356 205 416.0 245.5Q476 286 482 358H348Q344 332 320.0 318.5Q296 305 252 305Q212 305 192.5 316.5Q173 328 173 349Q173 367 189.0 377.5Q205 388 242 396L334 415Q411 431 450.5 474.5Q490 518 490 577Q490 652 431.5 693.5Q373 735 266 735Z M822 735Q737 735 674.0 701.5Q611 668 576.5 608.0Q542 548 542 470Q542 391 576.5 331.5Q611 272 673.0 238.5Q735 205 817 205Q896 205 954.0 237.0Q1012 269 1044.0 326.0Q1076 383 1076 460Q1076 476 1075.0 489.5Q1074 503 1072 515H630V416H951L925 434Q925 372 895.5 342.5Q866 313 815 313Q756 313 723.5 353.0Q691 393 691 473Q691 551 723.5 589.0Q756 627 821 627Q857 627 883.0 615.0Q909 603 922 576H1063Q1038 650 977.5 692.5Q917 735 822 735Z M1156 725V215H1303V335H1306V725ZM1511 725V409Q1511 367 1489.5 346.0Q1468 325 1427 325Q1392 325 1364.5 341.0Q1337 357 1321.5 385.0Q1306 413 1306 451L1293 328Q1318 272 1366.5 238.5Q1415 205 1486 205Q1571 205 1616.0 252.5Q1661 300 1661 380V725Z" fill="#EDEAE3"/><path d="M635 108V0H1002V108Z" fill="#C9A24A"/></svg></a>
+  <span class="lcd" role="status"><i></i>beta offen</span>
+</header>
+
+<main>
+  <section class="spalte buehne">
+    <h1 style="margin:0"><svg class="marke" viewBox="0 0 1715 735" role="img" aria-label="sēn"><path class="b" d="M266 735Q154 735 88.0 690.0Q22 645 16 566H150Q155 600 184.5 617.5Q214 635 266 635Q313 635 334.5 621.5Q356 608 356 583Q356 564 343.5 553.5Q331 543 298 536L216 519Q125 500 82.0 461.5Q39 423 39 362Q39 288 96.0 246.5Q153 205 255 205Q356 205 416.0 245.5Q476 286 482 358H348Q344 332 320.0 318.5Q296 305 252 305Q212 305 192.5 316.5Q173 328 173 349Q173 367 189.0 377.5Q205 388 242 396L334 415Q411 431 450.5 474.5Q490 518 490 577Q490 652 431.5 693.5Q373 735 266 735Z M822 735Q737 735 674.0 701.5Q611 668 576.5 608.0Q542 548 542 470Q542 391 576.5 331.5Q611 272 673.0 238.5Q735 205 817 205Q896 205 954.0 237.0Q1012 269 1044.0 326.0Q1076 383 1076 460Q1076 476 1075.0 489.5Q1074 503 1072 515H630V416H951L925 434Q925 372 895.5 342.5Q866 313 815 313Q756 313 723.5 353.0Q691 393 691 473Q691 551 723.5 589.0Q756 627 821 627Q857 627 883.0 615.0Q909 603 922 576H1063Q1038 650 977.5 692.5Q917 735 822 735Z M1156 725V215H1303V335H1306V725ZM1511 725V409Q1511 367 1489.5 346.0Q1468 325 1427 325Q1392 325 1364.5 341.0Q1337 357 1321.5 385.0Q1306 413 1306 451L1293 328Q1318 272 1366.5 238.5Q1415 205 1486 205Q1571 205 1616.0 252.5Q1661 300 1661 380V725Z"/><path class="m" d="M635 108V0H1002V108Z"/></svg></h1>
+    <p class="leitsatz">dein kopf ist kein speicher.</p>
+    <p class="einstieg">sēn sammelt Post, Rechnungen, Termine, Aufgaben und Projekte an einem ruhigen Ort – und zeigt dir nur, was gerade zählt. Gebaut für Köpfe, die anders denken. Und für alle, denen zwanzig Apps zu viel sind.</p>
+    <div class="knoepfe">
+      <a class="knopf" href="#beta">Für die Beta anmelden</a>
+      <a class="knopf leise" href="#einblick">So sieht sēn aus</a>
+    </div>
+  </section>
+
+  <section class="einblick" id="einblick">
+    <div class="spalte">
+      <h2>ein ort statt zwanzig apps.</h2>
+      <p class="unter">Jeder Bereich ist ein Modul auf einer ruhigen Platine. Du entscheidest, welche auf deinem Startbildschirm leben – und tippst hinein, wenn du so weit bist.</p>
+      <div class="buehnenbild">
+        <figure class="geraet" style="margin:0"><span class="s1"></span><span class="s2"></span>
+          <img src="bilder/app-start.webp" width="1600" height="1000" alt="Der Startbildschirm von sēn: oben die Termine von heute, darunter Module für Mail, Aufgaben, Projekte und Arbeit.">
+        </figure>
+        <figure class="handy" style="margin:0">
+          <img src="bilder/handy-projekte.webp" width="600" height="1298" loading="lazy" alt="sēn auf dem Handy: Projekte mit dem nächsten kleinen Schritt.">
+        </figure>
+      </div>
+      <div class="bildzeile">
+        <p>Auf dem Computer, dem iPad und dem Handy gleich – tags hell, nachts dunkel.</p>
+        <p>Projekte zeigen nur den nächsten kleinen Schritt. Der Rest wartet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="spalte haltung">
+    <h2>was sēn anders macht.</h2>
+    <dl>
+      <dt>Eine Sache im Fokus.</dt>
+      <dd>Kein Feed, keine roten Zähler, die drängen. sēn zeigt dir, was heute zählt, und hält den Rest ruhig im Hintergrund.</dd>
+      <dt>Nichts passiert ohne dich.</dt>
+      <dd>sēn erinnert dich an Fristen und ordnet deine Post. Bezahlen und entscheiden tust du – immer.</dd>
+      <dt>Deine Daten bleiben bei dir.</dt>
+      <dd>sēn läuft bei dir, nicht in einer fremden Cloud. Deine Briefe, Termine und Zahlen verlassen dein Zuhause nicht. Deine Welt, dein Server.</dd>
+    </dl>
+  </section>
+
+  <section class="spalte beta" id="beta">
+    <div class="text">
+      <h2>mach mit.</h2>
+      <p>Die Beta läuft zurzeit auf dem Mac. Trag dich ein – du bekommst deinen Zugang persönlich per Mail, sobald ein Platz frei ist.</p>
+      <p>Mit Windows, iPad oder Handy? Trag dich trotzdem ein. Wir melden uns, sobald sēn bei dir läuft.</p>
+    </div>
+    <form id="anmeldung" novalidate>
+      <div class="feld"><label for="f-name">Vorname</label><input id="f-name" name="name" autocomplete="given-name" maxlength="60"></div>
+      <div class="feld"><label for="f-mail">E-Mail</label><input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required></div>
+      <fieldset class="feld"><legend>Womit möchtest du sēn nutzen?</legend>
+        <div class="wahl">
+          <input type="radio" name="geraet" id="g-mac" value="mac" checked><label for="g-mac">Mac</label>
+          <input type="radio" name="geraet" id="g-win" value="windows"><label for="g-win">Windows</label>
+          <input type="radio" name="geraet" id="g-handy" value="handy"><label for="g-handy">Handy / iPad</label>
+          <input type="radio" name="geraet" id="g-andere" value="andere"><label for="g-andere">Etwas anderes</label>
+        </div>
+      </fieldset>
+      <div class="feld"><label for="f-text">Was soll sēn dir abnehmen? <span style="opacity:.7">(freiwillig)</span></label><textarea id="f-text" name="nachricht" maxlength="500"></textarea></div>
+      <div class="versteckt" aria-hidden="true"><label for="f-firma">Firma</label><input id="f-firma" name="firma" tabindex="-1" autocomplete="off"></div>
+      <div><button class="knopf" type="submit" id="senden">Anmelden</button></div>
+      <p class="meldung" id="meldung" role="status" aria-live="polite" hidden></p>
+      <p class="hinweis">Wir speichern nur, was du hier einträgst – auf unserem eigenen Server, ohne Newsletter-Dienst und ohne Tracking. <a href="datenschutz.html">Datenschutz</a></p>
+    </form>
+  </section>
+</main>
+
+<footer class="spalte fuss">
+  <span><b>deine welt. dein server.</b></span>
+  <span>© 2026 sēn · <a href="datenschutz.html">Datenschutz</a></span>
+</footer>
+
+<script>
+(()=>{
+  const HQ="https://deckcloud.tail1d0658.ts.net:10000/hq/warteliste";
+  const KONTAKT="gaba.inclouds@gmail.com";
+  const f=document.getElementById("anmeldung"),knopf=document.getElementById("senden"),meld=document.getElementById("meldung");
+  const zeige=(text,gut)=>{meld.textContent=text;meld.className="meldung"+(gut?" gut":"");meld.hidden=false};
+  f.addEventListener("submit",async e=>{
+    e.preventDefault();
+    const d=Object.fromEntries(new FormData(f));
+    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(d.email||"")){zeige("Bitte gib eine E-Mail-Adresse ein, unter der wir dich erreichen.");f.email.focus();return}
+    knopf.disabled=true;knopf.textContent="Wird gesendet …";
+    const ab=new AbortController();const t=setTimeout(()=>ab.abort(),12000);
+    try{
+      const r=await fetch(HQ,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d),signal:ab.signal});
+      const j=await r.json().catch(()=>({}));
+      if(r.ok){f.reset();zeige("Angemeldet. Du bekommst deinen Zugang per Mail, sobald dein Platz frei ist.",true);knopf.textContent="Angemeldet";return}
+      zeige(j.fehler||"Das hat nicht geklappt. Versuch es bitte nochmals.");
+    }catch(err){
+      meld.hidden=false;meld.className="meldung";
+      meld.innerHTML="";meld.append("Die Anmeldung ist gerade nicht erreichbar. Schreib uns stattdessen kurz an ");
+      const a=document.createElement("a");a.href="mailto:"+KONTAKT+"?subject="+encodeURIComponent("sēn Beta")+"&body="+encodeURIComponent((d.name||"")+"\n"+(d.email||"")+"\n"+(d.geraet||"")+"\n\n"+(d.nachricht||""));a.textContent=KONTAKT;
+      meld.append(a,".");
+    }finally{clearTimeout(t);if(knopf.textContent!=="Angemeldet"){knopf.disabled=false;knopf.textContent="Anmelden"}}
+  });
+})();
+</script>
+</body>
+</html>
