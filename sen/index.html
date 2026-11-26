@@ -122,6 +122,11 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
 .meldung{border-radius:14px;padding:16px 18px;font-size:16px;background:var(--gehaeuse);box-shadow:inset 0 0 0 1px var(--kante)}
 .meldung.gut{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--glut)}
 .meldung[hidden]{display:none}
+.danke{align-self:start;display:grid;gap:14px;padding:clamp(24px,4vw,40px);border-radius:20px;background:var(--gehaeuse);box-shadow:inset 0 0 0 1.5px var(--gold)}
+.danke[hidden],form[hidden]{display:none}
+.danke h3{margin:0;font:600 clamp(26px,3.4vw,38px)/1.15 "Instrument Sans",sans-serif;color:var(--knochen)}
+.danke p{margin:0;color:#c3bfb6;font-size:18px}
+.danke .lcd{justify-self:start}
 
 .fuss{border-top:1px solid var(--kante);padding:34px 0 calc(34px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;color:var(--rauch);font-size:15px}
 .fuss b{color:var(--knochen);font-weight:600}
@@ -219,7 +224,7 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
       <p>Die Beta läuft zurzeit auf dem Mac. Trag dich ein – du bekommst deinen Zugang persönlich per Mail, sobald ein Platz frei ist.</p>
       <p>Mit Windows, iPad oder Handy? Trag dich trotzdem ein. Wir melden uns, sobald sēn bei dir läuft.</p>
     </div>
-    <form id="anmeldung" novalidate>
+    <form id="anmeldung" method="post" action="https://deckcloud.tail1d0658.ts.net:10000/hq/warteliste" novalidate>
       <div class="feld"><label for="f-name">Vorname</label><input id="f-name" name="name" autocomplete="given-name" maxlength="60"></div>
       <div class="feld"><label for="f-mail">E-Mail</label><input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required></div>
       <fieldset class="feld"><legend>Womit möchtest du sēn nutzen?</legend>
@@ -237,6 +242,11 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
       <p class="meldung" id="meldung" role="status" aria-live="polite" hidden></p>
       <p class="hinweis">Wir speichern nur, was du hier einträgst – auf unserem eigenen Server, ohne Newsletter-Dienst und ohne Tracking. <a href="datenschutz.html">Datenschutz</a></p>
     </form>
+    <div class="danke" id="danke" role="status" hidden>
+      <span class="lcd"><i></i>angemeldet</span>
+      <h3>Danke für die Anmeldung.</h3>
+      <p>Du hörst schon bald Neues von uns.</p>
+    </div>
   </section>
 </main>
 
@@ -247,29 +257,22 @@ fieldset.feld{border:0;margin:0;padding:0;min-width:0}
 
 <script>
 (()=>{
-  const HQ="https://deckcloud.tail1d0658.ts.net:10000/hq/warteliste";
-  const KONTAKT="gaba.inclouds@gmail.com";
-  const f=document.getElementById("anmeldung"),knopf=document.getElementById("senden"),meld=document.getElementById("meldung");
+  // Normales Formular (keine Hintergrund-Abfrage → keine Browser-Rückfrage „lokales Netzwerk").
+  // Der sēn-Server speichert und schickt zurück hierher: ?danke=1 oder ?fehler=…
+  const f=document.getElementById("anmeldung"),knopf=document.getElementById("senden"),meld=document.getElementById("meldung"),danke=document.getElementById("danke");
   document.querySelectorAll("[data-geraet]").forEach(a=>a.addEventListener("click",()=>{document.getElementById("f-hw").checked=true}));
-  const zeige=(text,gut)=>{meld.textContent=text;meld.className="meldung"+(gut?" gut":"");meld.hidden=false};
-  f.addEventListener("submit",async e=>{
-    e.preventDefault();
-    const d=Object.fromEntries(new FormData(f));d.hardware=!!d.hardware;
-    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(d.email||"")){zeige("Bitte gib eine E-Mail-Adresse ein, unter der wir dich erreichen.");f.email.focus();return}
+  const zeige=text=>{meld.textContent=text;meld.className="meldung";meld.hidden=false};
+  const q=new URLSearchParams(location.search);
+  if(q.has("danke")){f.hidden=true;danke.hidden=false}
+  else if(q.get("fehler")==="mail")zeige("Bitte gib eine E-Mail-Adresse ein, unter der wir dich erreichen.");
+  else if(q.get("fehler")==="viele")zeige("Gerade kommen sehr viele Anmeldungen. Versuch es bitte später nochmals.");
+  else if(q.has("fehler"))zeige("Das hat nicht geklappt. Versuch es bitte nochmals.");
+  if(q.has("danke")||q.has("fehler"))history.replaceState(null,"",location.pathname+"#beta");
+  f.addEventListener("submit",e=>{
+    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(f.email.value.trim())){e.preventDefault();zeige("Bitte gib eine E-Mail-Adresse ein, unter der wir dich erreichen.");f.email.focus();return}
     knopf.disabled=true;knopf.textContent="Wird gesendet …";
-    const ab=new AbortController();const t=setTimeout(()=>ab.abort(),12000);
-    try{
-      const r=await fetch(HQ,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d),signal:ab.signal});
-      const j=await r.json().catch(()=>({}));
-      if(r.ok){f.reset();zeige("Angemeldet. Du bekommst deinen Zugang per Mail, sobald dein Platz frei ist.",true);knopf.textContent="Angemeldet";return}
-      zeige(j.fehler||"Das hat nicht geklappt. Versuch es bitte nochmals.");
-    }catch(err){
-      meld.hidden=false;meld.className="meldung";
-      meld.innerHTML="";meld.append("Die Anmeldung ist gerade nicht erreichbar. Schreib uns stattdessen kurz an ");
-      const a=document.createElement("a");a.href="mailto:"+KONTAKT+"?subject="+encodeURIComponent("sēn Beta")+"&body="+encodeURIComponent((d.name||"")+"\n"+(d.email||"")+"\n"+(d.geraet||"")+"\n\n"+(d.nachricht||""));a.textContent=KONTAKT;
-      meld.append(a,".");
-    }finally{clearTimeout(t);if(knopf.textContent!=="Angemeldet"){knopf.disabled=false;knopf.textContent="Anmelden"}}
   });
+  addEventListener("pageshow",()=>{knopf.disabled=false;knopf.textContent="Anmelden"});
 })();
 </script>
 </body>
